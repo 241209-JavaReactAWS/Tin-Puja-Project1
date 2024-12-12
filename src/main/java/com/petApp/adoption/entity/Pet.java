@@ -3,16 +3,16 @@ package com.petApp.adoption.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "pets")
-public class Pets {
+public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer petId;
+
     private String name;
     @Column
     private String breed;

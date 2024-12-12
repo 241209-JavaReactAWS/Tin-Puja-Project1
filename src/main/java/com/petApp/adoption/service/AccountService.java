@@ -14,14 +14,13 @@ public class AccountService {
     }
 
     public Account createUser(Account account){
-
         Account newUser = new Account();
         newUser.setEmail(account.getEmail());
         newUser.setPassword(account.getPassword());
         newUser.setRole(account.getRole());
         newUser.setUsername(account.getUsername());
         newUser.setId(account.getId());
-        accountRepository.save(newUser);
-        return newUser;
+        Account createdUser = accountRepository.save(newUser);
+        return createdUser;
     }
 }

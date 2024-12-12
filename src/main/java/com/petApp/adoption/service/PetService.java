@@ -1,6 +1,6 @@
 package com.petApp.adoption.service;
 
-import com.petApp.adoption.entity.Pets;
+import com.petApp.adoption.entity.Pet;
 import com.petApp.adoption.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,14 +12,14 @@ public class PetService {
     public PetService(PetRepository petRepository) {
         this.petRepository = petRepository;
     }
-    public Pets createPets (Pets pets){
-        Pets newPets = new Pets();
-        newPets.setAge(pets.getAge());
-        newPets.setName(pets.getName());
-        newPets.setPetCondition(pets.getPetCondition());
-        newPets.setGender(pets.getGender());
-        newPets.setBreed(pets.getBreed());
-        petRepository.save(newPets);
-        return newPets;
+    public Pet createPet(Pet pet) {
+        Pet newPet = new Pet();
+        newPet.setAge(pet.getAge());
+        newPet.setName(pet.getName());
+        newPet.setPetCondition(pet.getPetCondition());
+        newPet.setGender(pet.getGender());
+        newPet.setBreed(pet.getBreed());
+        Pet createdPet = petRepository.save(newPet);
+        return createdPet;
     }
 }
