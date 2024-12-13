@@ -5,10 +5,9 @@ import com.petApp.adoption.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/pet")
@@ -29,4 +28,34 @@ public class PetController {
             return  new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
     }
+
+
+    @GetMapping("/fetch")
+    ResponseEntity<Pet> fetchPetById(@RequestParam Integer petId){
+        Pet result = petService.fetchPetById(petId);
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/fetchAll")
+    ResponseEntity<List<Pet>>  fetchAll(){
+        List <Pet> result = petService.fetchAll();
+        if (result != null){
+            return new ResponseEntity<>(result , HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping("/delete")
+    ResponseEntity<String> deletePetById(@RequestParam Integer petId){
+        String result = petService.deletPetById(petId);
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+        }else {
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

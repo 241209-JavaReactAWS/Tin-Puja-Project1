@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.List;
+import java.util.Optional;
+
 import static com.petApp.adoption.util.Codes.CREATE_PET;
 
 
@@ -54,6 +57,33 @@ public class PetService {
             return createdPet;
         } catch (BadRequestException ex){
             throw new BadRequestException("Pet registration failed : bad request");
+        }
+    }
+    public Pet fetchPetById(Integer petId ){
+      Optional<Pet> retreivePet = petRepository.findById(petId);
+      if(retreivePet.isPresent()){
+          return retreivePet.get();
+      }else{
+          return null;
+      }
+    }
+    public List<Pet> fetchAll(){
+        Optional<List<Pet>> fetchAll = Optional.of(petRepository.findAll());
+        if (fetchAll.isPresent()){
+            return fetchAll.get();
+        }else{
+            return null;
+        }
+    }
+
+    public String deletPetById(Integer petId) {
+        Optional<Pet> retreivePet = petRepository.findById(petId);
+        if (retreivePet.isPresent()){
+            petRepository.deleteById(petId);
+            String result = "Pet Deleted Successfully";
+            return result;
+        }else{
+            return null;
         }
     }
 }
