@@ -21,8 +21,12 @@ public class PetController {
     }
 
     @PostMapping("/create")
-    ResponseEntity<Pet> registerPets(@RequestBody Pet pet) {
+    ResponseEntity<Pet> registerPets(@RequestBody Pet pet) throws Exception {
         Pet result = petService.createPet(pet);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        if(result != null){
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        } else {
+            return  new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+        }
     }
 }

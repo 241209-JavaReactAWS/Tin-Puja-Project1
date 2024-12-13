@@ -5,8 +5,10 @@ import com.petApp.adoption.entity.TransactionalLog;
 import com.petApp.adoption.repository.PetRepository;
 import com.petApp.adoption.util.Codes;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static com.petApp.adoption.util.Codes.CREATE_PET;
 
@@ -15,34 +17,43 @@ import static com.petApp.adoption.util.Codes.CREATE_PET;
 @Slf4j
 public class PetService {
 
-//    @Autowired
-//    Codes codes;
-
     PetRepository petRepository;
     TransactionalLogService transactionalLogService;
+    CheckValidation checkValidation;
 
     @Autowired
-    public PetService(PetRepository petRepository, TransactionalLogService transactionalLogService) {
+    public PetService(PetRepository petRepository, TransactionalLogService transactionalLogService, CheckValidation checkValidation) {
         this.petRepository = petRepository;
         this.transactionalLogService = transactionalLogService;
+        this.checkValidation = checkValidation;
     }
 
-    public Pet createPet(Pet pet) {
-        Pet newPet = new Pet();
-        newPet.setAge(pet.getAge());
-        newPet.setName(pet.getName());
-        newPet.setPetCondition(pet.getPetCondition());
-        newPet.setGender(pet.getGender());
-        newPet.setBreed(pet.getBreed());
-        Pet createdPet = petRepository.save(newPet);
+    public Pet createPet(Pet pet) throws Exception {
 
-        TransactionalLog record = new TransactionalLog();
-        record.setPet(createdPet.getName());
-        record.setUsername("NA");
-        record.setDescription(CREATE_PET);
+        try{
+            Pet newPet = new Pet();
+            newPet.setAge(pet.getAge());
+            newPet.setName(pet.getName());
+            newPet.setPetCondition(pet.getPetCondition());
+            newPet.setGender(pet.getGender());
+            newPet.setBreed(pet.getBreed());
 
-        transactionalLogService.createTransactionalLog(record);
+            log.info("Starting pet registration validation");
+            checkValidation.checkRegisterValdiation(newPet);
 
-        return createdPet;
+            Pet createdPet = petRepository.save(newPet);
+
+            log.info("Logging transaction for registering pet");
+            TransactionalLog record = new TransactionalLog();
+            record.setPet(createdPet.getName());
+            record.setUsername("NA");
+            record.setDescription(CREATE_PET);
+
+            transactionalLogService.createTransactionalLog(record);
+
+            return createdPet;
+        } catch (BadRequestException ex){
+            throw new BadRequestException("Pet registration failed : bad request");
+        }
     }
 }
