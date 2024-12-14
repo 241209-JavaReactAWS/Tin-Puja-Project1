@@ -57,5 +57,14 @@ public class PetController {
             return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
         }
     }
+    @PatchMapping("/update")
+    ResponseEntity<Pet> updatePetById(@RequestParam Integer petId, @RequestBody Pet pet) throws Exception {
+        Pet result =  petService.updatePetById(petId, pet);
+        if (result != null){
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
