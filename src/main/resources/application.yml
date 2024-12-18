@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: adoption
+
+# PostgreSQL DB
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pet
+    username: admin
+    password: password
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # create-drop means the database is fresh on each restart
+    hibernate:
+      ddl-auto: create-drop

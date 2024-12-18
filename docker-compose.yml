@@ -1,18 +1,17 @@
-#Docker compose
 services:
   postgres:
-    container_name: pet-postgres_container
+    container_name: pet_postgres_container
     image: postgres
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
+      PGDATA: /var/lib/postgresql/data
     volumes:
-      - postgres:/data/postgres
+      - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - pet-app
     restart: unless-stopped
 
   pgadmin:
@@ -23,17 +22,33 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     volumes:
-      - pgadmin:/var/lib/pgadmin
+      - pgadmin-data:/var/lib/pgadmin
     ports:
       - "5050:80"
     networks:
-      - postgres
+      - pet-app
     restart: unless-stopped
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.0
+    ports:
+      - "9090:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    networks:
+      - pet-app
+    volumes:
+      - keycloak-data:/opt/keycloak/data/
+    restart: unless-stopped
+    command:
+      - "start-dev"
+
 networks:
-  postgres:
+  pet-app:
     driver: bridge
 
 volumes:
-  postgres:
-  pgadmin:
+  postgres-data:
+  pgadmin-data:
+  keycloak-data:
