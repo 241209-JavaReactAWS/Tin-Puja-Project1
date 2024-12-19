@@ -1,4 +1,4 @@
-package com.petApp.adoption.entity;
+package com.petApp.adoption.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,17 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "pets")
-public class Pet {
+@Table(name = "transaction_log")
+public class TransactionalLog {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer petId;
-
-    private String name;
-    @Column
-    private String breed;
-    private Integer age;
-    private String petCondition;
-    private String gender;
+    private Integer transactionalId;
+    private String username;
+    private String pet;
+    private String description;
 
 }
