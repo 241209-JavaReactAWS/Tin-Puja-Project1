@@ -6,11 +6,13 @@ import com.petApp.adoption.repository.PetRepository;
 import com.petApp.adoption.util.Codes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.petApp.adoption.util.Codes.CREATE_PET;
@@ -32,7 +34,6 @@ public class PetService {
     }
 
     public Pet createPet(Pet pet) throws Exception {
-
         try{
             Pet newPet = new Pet();
             newPet.setAge(pet.getAge());
@@ -59,7 +60,7 @@ public class PetService {
             throw new BadRequestException("Pet registration failed : bad request");
         }
     }
-    public Pet fetchPetById(Integer petId ){
+    public Pet fetchPetById(Integer petId ) throws Exception {
       Optional<Pet> retreivePet = petRepository.findById(petId);
       if(retreivePet.isPresent()){
           log.info("Logging transaction for registering pet");
@@ -70,27 +71,27 @@ public class PetService {
           transactionalLogService.createTransactionalLog(record);
           return retreivePet.get();
       }else{
-          return null;
+          throw new BadRequestException("Pet id not found");
       }
     }
-    public List<Pet> fetchAll(){
-        Optional<List<Pet>> fetchAll = Optional.of(petRepository.findAll());
-        if (fetchAll.isPresent()){
-            log.info("Logging transaction for registering pet");
-            TransactionalLog record = new TransactionalLog();
-            record.setPet("N/A");
-            record.setUsername("NA");
-            record.setDescription(Codes.FETCH_ALL_PET);
-            transactionalLogService.createTransactionalLog(record);
-            return fetchAll.get();
-        }else{
-            return null;
-        }
+    public List<Pet> fetchAll() throws Exception {
+            List<Pet> fetchAll = petRepository.findAll();
+            if (!fetchAll.isEmpty()){
+                log.info("Logging transaction for registering pet");
+                TransactionalLog record = new TransactionalLog();
+                record.setPet("N/A");
+                record.setUsername("NA");
+                record.setDescription(Codes.FETCH_ALL_PET);
+                transactionalLogService.createTransactionalLog(record);
+                return fetchAll;
+            } else {
+                throw new IllegalArgumentException("fetchAll");
+            }
     }
 
-    public String deletPetById(Integer petId) {
+    public String deletPetById(Integer petId) throws Exception {
         Optional<Pet> retreivePet = petRepository.findById(petId);
-        if (retreivePet.isPresent()){
+        if (retreivePet.isPresent()) {
             log.info("Logging transaction for registering pet");
             TransactionalLog record = new TransactionalLog();
             record.setPet(retreivePet.get().getName());
@@ -100,18 +101,18 @@ public class PetService {
             petRepository.deleteById(petId);
             String result = "Pet Deleted Successfully";
             return result;
-        }else{
-            return null;
+        } else {
+            throw new BadRequestException("Pet id not found");
         }
     }
 
-    public Pet updatePetById(Integer petId, Pet pet) throws Exception {
-        Optional<Pet> retreivePet = petRepository.findById(petId);
+    public Pet updatePetById(Pet pet) throws Exception {
+        Optional<Pet> retreivePet = petRepository.findById(pet.getPetId());
         if (retreivePet.isPresent()){
             log.info("Validation Check");
-            checkValidation.checkRegisterValdiation(pet);
+//            checkValidation.checkRegisterValdiation(pet);
             Pet updatePet = new Pet();
-//            updatePet.setPetId(pet.getPetId());
+            updatePet.setPetId(pet.getPetId());
             updatePet.setBreed(pet.getBreed());
             updatePet.setName(pet.getName());
             updatePet.setAge(pet.getAge());
@@ -126,7 +127,7 @@ public class PetService {
             transactionalLogService.createTransactionalLog(record);
             return updatedPet;
         }else{
-            return null;
+            throw new BadRequestException("Pet Modifcation failed. Check all fields");
         }
     }
 }

@@ -19,7 +19,27 @@ public class CheckValidation {
                 (pet.getName() ==null) ||
                 (pet.getGender() ==null) ){
             log.info("Pet registration failed");
-            throw new BadRequestException("Failed Validation");
+            throw new IllegalArgumentException("Failed Validation");
+        } else {
+            log.info("Pet registration form validation passed");
+            passesValidation = true;
+            return passesValidation;
+        }
+
+    }
+
+    public Boolean checkUpdateValdiation(Pet pet) throws Exception {
+
+        Boolean passesValidation = false;
+
+        if(pet.getPetId() == null ||
+                (pet.getAge() ==null) ||
+                (pet.getBreed() ==null) ||
+                (pet.getPetCondition() ==null) ||
+                (pet.getName() ==null) ||
+                (pet.getGender() ==null) ){
+            log.info("Pet registration failed");
+            throw new IllegalArgumentException("Failed Validation");
         } else {
             log.info("Pet registration form validation passed");
             passesValidation = true;
