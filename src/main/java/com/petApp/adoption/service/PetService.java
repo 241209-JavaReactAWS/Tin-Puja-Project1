@@ -1,7 +1,7 @@
 package com.petApp.adoption.service;
 
-import com.petApp.adoption.entity.Pet;
-import com.petApp.adoption.entity.TransactionalLog;
+import com.petApp.adoption.models.Pet;
+import com.petApp.adoption.models.TransactionalLog;
 import com.petApp.adoption.repository.PetRepository;
 import com.petApp.adoption.util.Codes;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,6 @@ import org.apache.coyote.BadRequestException;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.NoSuchElementException;

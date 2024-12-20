@@ -1,6 +1,6 @@
 package com.petApp.adoption.controller;
 
-import com.petApp.adoption.entity.Pet;
+import com.petApp.adoption.models.Pet;
 import com.petApp.adoption.service.PetService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;

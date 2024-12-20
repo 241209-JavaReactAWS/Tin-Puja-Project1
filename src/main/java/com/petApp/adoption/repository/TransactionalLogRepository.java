@@ -1,6 +1,6 @@
 package com.petApp.adoption.repository;
 
-import com.petApp.adoption.entity.TransactionalLog;
+import com.petApp.adoption.models.TransactionalLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

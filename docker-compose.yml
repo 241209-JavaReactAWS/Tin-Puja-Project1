@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: pet_postgres_container
+    container_name: pet-postgres-container
     image: postgres
     environment:
       POSTGRES_USER: admin
@@ -8,6 +8,7 @@ services:
       PGDATA: /var/lib/postgresql/data
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
@@ -15,7 +16,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    container_name: pet-pgadmin_container
+    container_name: pet-pgadmin-container
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
@@ -40,9 +41,10 @@ services:
       - pet-app
     volumes:
       - keycloak-data:/opt/keycloak/data/
+      #- ./keycloak:/opt/keycloak/data/import
     restart: unless-stopped
     command:
-      - "start-dev"
+      - "-v start-dev"
 
 networks:
   pet-app:

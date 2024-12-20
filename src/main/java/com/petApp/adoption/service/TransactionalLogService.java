@@ -1,6 +1,6 @@
 package com.petApp.adoption.service;
 
-import com.petApp.adoption.entity.TransactionalLog;
+import com.petApp.adoption.models.TransactionalLog;
 import com.petApp.adoption.repository.TransactionalLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
