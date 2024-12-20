@@ -41,7 +41,8 @@ services:
       - pet-app
     volumes:
       - keycloak-data:/opt/keycloak/data/
-      #- ./keycloak:/opt/keycloak/data/import
+      # doesn't work with json array with multiple realms?
+      # - ./keycloak:/opt/keycloak/data/import
     restart: unless-stopped
     command:
       - "-v start-dev"
