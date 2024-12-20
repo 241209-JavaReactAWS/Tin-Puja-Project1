@@ -12,8 +12,13 @@ docker exec -it pet_postgres_container psql -U admin
    docker rm $(docker ps -a -q)
 
 To import keycloak.json
-
-bin/kc.sh import --file /path/to/multiple-realms.json
+(Note the container id for keycloak container)
+docker ps
+(Copy keycloak.json into container)
+docker cp ./keycloak/keycloak.json <keycloak-container-id>:/
+(import config)
+docker exec -it <keycloak-container-id> /bin/bash
+/opt/keycloak/bin/kc.sh import --file /keycloak.json
 
 To Export Keycloak Realm Config
 1. TODO:
