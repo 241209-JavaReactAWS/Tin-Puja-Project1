@@ -42,7 +42,5 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-
-
     }
 }

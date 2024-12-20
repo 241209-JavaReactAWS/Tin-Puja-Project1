@@ -44,9 +44,23 @@ public class UserService {
             // Extract the "sub" claim
             String subject = jwt.getClaim(JwtClaimNames.SUB);
 
+            // at this point the user exists in keycloak
             Optional<User> foundUser = userRepository.findBySub(subject);
-            if (foundUser.isEmpty()) return null;
-            return new LoggedInDTO(foundUser.get(), token);
+            User res;
+            // if user isn't in userdb, create them based on the JWT
+            if (foundUser.isEmpty()) {
+                User outOfSyncUser = new User();
+                outOfSyncUser.setSub(subject);
+                outOfSyncUser.setUsername(jwt.getClaim("preferred_username"));
+                outOfSyncUser.setEmail(jwt.getClaim("email"));
+                outOfSyncUser.setFirstName(jwt.getClaim("given_name"));
+                outOfSyncUser.setLastName(jwt.getClaim("family_name"));
+                res = userRepository.save(outOfSyncUser);
+            } else {
+                res = foundUser.get();
+            }
+
+            return new LoggedInDTO(res, token);
         } catch (Exception e) {
             return null;
         }
