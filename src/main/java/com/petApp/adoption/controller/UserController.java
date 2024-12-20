@@ -37,8 +37,11 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody RegisterDTO registerDTO){
         try {
-            User newUser = userService.registerUser(registerDTO);
-            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+            LoggedInDTO newUser = userService.registerUser(registerDTO);
+            if (newUser == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + newUser.getJwt());
+            return new ResponseEntity(newUser.getUser(), headers, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }

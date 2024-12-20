@@ -65,7 +65,7 @@ public class UserService {
             return null;
         }
     }
-    public User registerUser(RegisterDTO userToBeRegistered) throws Exception{
+    public LoggedInDTO registerUser(RegisterDTO userToBeRegistered) throws Exception{
         // get admin access_token
         String token = getAccessToken(ADMIN_USERNAME, ADMIN_PASSWORD);
         // attempt to register user in keycloak
@@ -98,7 +98,9 @@ public class UserService {
         // persist user and return user else return null
         if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.CREATED) {
             // login and set sub, return access token
-            return null;
+            LoginDTO loginDTO = new LoginDTO(userToBeRegistered.getUsername(), userToBeRegistered.getPassword());
+            LoggedInDTO loggedInDTO = loginUser(loginDTO);
+            return loggedInDTO;
         } else {
             throw new Exception("Unsuccessful user registration");
         }
