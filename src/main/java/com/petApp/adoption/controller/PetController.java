@@ -6,12 +6,13 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/pet")
+@RequestMapping("/api/pet")
 public class PetController {
     PetService petService;
 
@@ -21,6 +22,7 @@ public class PetController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('pet-admin')")
     ResponseEntity<Pet> registerPets(@RequestBody Pet pet) throws Exception {
         Pet result = petService.createPet(pet);
         if(result != null){
@@ -29,7 +31,6 @@ public class PetController {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
     }
-
 
     @GetMapping("/fetch")
     ResponseEntity<Pet> fetchPetById(@RequestParam Integer petId) throws Exception {
@@ -50,6 +51,7 @@ public class PetController {
         }
     }
     @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('pet-admin')")
     ResponseEntity<String> deletePetById(@RequestParam Integer petId) throws Exception {
         String result = petService.deletPetById(petId);
         if (result != null){
@@ -59,6 +61,7 @@ public class PetController {
         }
     }
     @PutMapping("/update")
+    @PreAuthorize("hasRole('pet-admin')")
     ResponseEntity<Pet> updatePetById(@RequestBody Pet pet) throws Exception {
         Pet result =  petService.updatePetById(pet);
         if (result != null){
