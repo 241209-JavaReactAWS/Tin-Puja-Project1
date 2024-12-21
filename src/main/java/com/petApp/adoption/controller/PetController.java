@@ -71,4 +71,11 @@ public class PetController {
         }
     }
 
+    @PutMapping("/adopt")
+    ResponseEntity<Pet> adoptPetById(@RequestBody Integer petId) throws Exception {
+        Pet adoptedPet = petService.adoptPet(petId);
+        if (adoptedPet != null) return new ResponseEntity<>(adoptedPet, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 }

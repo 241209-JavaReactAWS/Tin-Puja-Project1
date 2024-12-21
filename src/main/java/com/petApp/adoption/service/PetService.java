@@ -2,6 +2,7 @@ package com.petApp.adoption.service;
 
 import com.petApp.adoption.models.Pet;
 import com.petApp.adoption.models.TransactionalLog;
+import com.petApp.adoption.models.enums.PetStatus;
 import com.petApp.adoption.repository.PetRepository;
 import com.petApp.adoption.util.Codes;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,15 @@ public class PetService {
         this.petRepository = petRepository;
         this.transactionalLogService = transactionalLogService;
         this.checkValidation = checkValidation;
+    }
+
+    public Pet adoptPet(Integer petId) {
+        Optional<Pet> pet = petRepository.findById(petId);
+        if (pet.isPresent() && pet.get().getStatus() == PetStatus.ACTIVE) {
+            pet.get().setStatus(PetStatus.ADOPTED);
+            petRepository.save(pet.get());
+        }
+        return null;
     }
 
     public Pet createPet(Pet pet) throws Exception {
