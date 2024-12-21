@@ -9,5 +9,4 @@ import lombok.Data;
 public class LoggedInDTO {
     private User user;
     private String jwt;
-
 }

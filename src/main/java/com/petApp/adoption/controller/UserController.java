@@ -25,23 +25,23 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<LoggedInDTO> loginUser(@RequestBody LoginDTO loginDTO) {
         LoggedInDTO loggedInUser = userService.loginUser(loginDTO);
         if (loggedInUser == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + loggedInUser.getJwt());
-        return new ResponseEntity(loggedInUser.getUser(), headers, HttpStatus.OK);
+        return new ResponseEntity(loggedInUser, headers, HttpStatus.OK);
     }
 
     // http://localhost:9090/realms/revature/protocol/openid-connect/auth?client_id=pet-app&response_type=code&redirect_uri=http://localhost:8080
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody RegisterDTO registerDTO){
+    public ResponseEntity<LoggedInDTO> registerUser(@RequestBody RegisterDTO registerDTO){
         try {
             LoggedInDTO newUser = userService.registerUser(registerDTO);
             if (newUser == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + newUser.getJwt());
-            return new ResponseEntity(newUser.getUser(), headers, HttpStatus.CREATED);
+            return new ResponseEntity(newUser, headers, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
