@@ -26,3 +26,12 @@ jwt:
       resource-id: pet-app
       principal-attribute: preferred_username
 
+
+cors:
+  allowed:
+    origins: http://localhost:5173
+    methods: GET, POST, PUT, DELETE, PATCH, OPTIONS
+    headers: "*"
+  allow:
+    credentials: true
+

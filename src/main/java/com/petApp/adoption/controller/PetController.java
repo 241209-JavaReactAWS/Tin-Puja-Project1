@@ -44,11 +44,7 @@ public class PetController {
     @GetMapping("/public/fetchAll")
     ResponseEntity<List<Pet>>  fetchAll() throws Exception {
         List <Pet> result = petService.fetchAll();
-        if (!result.isEmpty()){
-            return new ResponseEntity<>(result , HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
-        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @DeleteMapping("/protected/delete/{petId}")
     @PreAuthorize("hasRole('pet-admin')")

@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -107,8 +108,9 @@ public class PetService {
       }
     }
     public List<Pet> fetchAll() {
-            List<Pet> fetchAll = petRepository.findByStatus(PetStatus.ACTIVE);
-            return fetchAll;
+            List<Pet> pets = new ArrayList<>();
+            pets = petRepository.findByStatus(PetStatus.ACTIVE);
+            return pets;
     }
 
     public String deletPetById(Integer petId) throws Exception {
