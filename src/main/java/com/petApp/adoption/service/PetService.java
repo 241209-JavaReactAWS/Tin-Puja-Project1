@@ -2,14 +2,18 @@ package com.petApp.adoption.service;
 
 import com.petApp.adoption.models.Pet;
 import com.petApp.adoption.models.TransactionalLog;
+import com.petApp.adoption.models.User;
 import com.petApp.adoption.models.enums.PetStatus;
 import com.petApp.adoption.repository.PetRepository;
+import com.petApp.adoption.repository.UserRepository;
 import com.petApp.adoption.util.Codes;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,18 +31,26 @@ public class PetService {
     TransactionalLogService transactionalLogService;
     CheckValidation checkValidation;
 
+    UserRepository userRepository;
+
     @Autowired
-    public PetService(PetRepository petRepository, TransactionalLogService transactionalLogService, CheckValidation checkValidation) {
+    public PetService(PetRepository petRepository, TransactionalLogService transactionalLogService, CheckValidation checkValidation, UserRepository userRepository) {
         this.petRepository = petRepository;
         this.transactionalLogService = transactionalLogService;
         this.checkValidation = checkValidation;
+        this.userRepository = userRepository;
     }
 
     public Pet adoptPet(Integer petId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Pet> pet = petRepository.findById(petId);
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) throw new RuntimeException("Authenticated user not found in database");
         if (pet.isPresent() && pet.get().getStatus() == PetStatus.ACTIVE) {
             pet.get().setStatus(PetStatus.ADOPTED);
-            petRepository.save(pet.get());
+            pet.get().setAdopter(user.get());
+            Pet adoptedPet = petRepository.save(pet.get());
+            return adoptedPet;
         }
         return null;
     }
@@ -51,6 +63,7 @@ public class PetService {
             newPet.setPetCondition(pet.getPetCondition());
             newPet.setGender(pet.getGender());
             newPet.setBreed(pet.getBreed());
+            newPet.setStatus(PetStatus.ACTIVE);
 
             log.info("Starting pet registration validation");
             checkValidation.checkRegisterValdiation(newPet);
@@ -84,19 +97,9 @@ public class PetService {
           throw new BadRequestException("Pet id not found");
       }
     }
-    public List<Pet> fetchAll() throws Exception {
+    public List<Pet> fetchAll() {
             List<Pet> fetchAll = petRepository.findAll();
-            if (!fetchAll.isEmpty()){
-                log.info("Logging transaction for registering pet");
-                TransactionalLog record = new TransactionalLog();
-                record.setPet("N/A");
-                record.setUsername("NA");
-                record.setDescription(Codes.FETCH_ALL_PET);
-                transactionalLogService.createTransactionalLog(record);
-                return fetchAll;
-            } else {
-                throw new IllegalArgumentException("fetchAll");
-            }
+            return fetchAll;
     }
 
     public String deletPetById(Integer petId) throws Exception {

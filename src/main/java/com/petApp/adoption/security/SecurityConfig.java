@@ -27,7 +27,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/api/**").authenticated()
+                                // pet endpoints
+                                .requestMatchers("/api/pet/protected/**").authenticated() // Require authentication
+                                .requestMatchers("/api/pet/public/**").permitAll()
+
+
                                 .anyRequest().permitAll()
                 );
         http
