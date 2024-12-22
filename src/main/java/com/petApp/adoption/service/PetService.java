@@ -98,7 +98,7 @@ public class PetService {
       }
     }
     public List<Pet> fetchAll() {
-            List<Pet> fetchAll = petRepository.findAll();
+            List<Pet> fetchAll = petRepository.findByStatus(PetStatus.ACTIVE);
             return fetchAll;
     }
 
