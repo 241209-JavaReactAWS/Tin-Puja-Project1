@@ -21,7 +21,7 @@ public class PetController {
         this.petService = petService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/protected/create")
     @PreAuthorize("hasRole('pet-admin')")
     ResponseEntity<Pet> registerPets(@RequestBody Pet pet) throws Exception {
         Pet result = petService.createPet(pet);
@@ -32,7 +32,7 @@ public class PetController {
         }
     }
 
-    @GetMapping("/fetch")
+    @GetMapping("/public/fetch")
     ResponseEntity<Pet> fetchPetById(@RequestParam Integer petId) throws Exception {
         Pet result = petService.fetchPetById(petId);
         if (result != null){
@@ -41,7 +41,7 @@ public class PetController {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping("/fetchAll")
+    @GetMapping("/public/fetchAll")
     ResponseEntity<List<Pet>>  fetchAll() throws Exception {
         List <Pet> result = petService.fetchAll();
         if (!result.isEmpty()){
@@ -50,9 +50,9 @@ public class PetController {
             return new ResponseEntity<>(result, HttpStatus.NO_CONTENT);
         }
     }
-    @DeleteMapping("/delete")
+    @DeleteMapping("/protected/delete/{petId}")
     @PreAuthorize("hasRole('pet-admin')")
-    ResponseEntity<String> deletePetById(@RequestParam Integer petId) throws Exception {
+    ResponseEntity<String> deletePetById(@PathVariable Integer petId) throws Exception {
         String result = petService.deletPetById(petId);
         if (result != null){
             return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
@@ -60,7 +60,7 @@ public class PetController {
             return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
     }
-    @PutMapping("/update")
+    @PutMapping("/protected/update")
     @PreAuthorize("hasRole('pet-admin')")
     ResponseEntity<Pet> updatePetById(@RequestBody Pet pet) throws Exception {
         Pet result =  petService.updatePetById(pet);
@@ -71,8 +71,8 @@ public class PetController {
         }
     }
 
-    @PutMapping("/adopt")
-    ResponseEntity<Pet> adoptPetById(@RequestBody Integer petId) throws Exception {
+    @PutMapping("/protected/adopt/{petId}")
+    ResponseEntity<Pet> adoptPetById(@PathVariable Integer petId) throws Exception {
         Pet adoptedPet = petService.adoptPet(petId);
         if (adoptedPet != null) return new ResponseEntity<>(adoptedPet, HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

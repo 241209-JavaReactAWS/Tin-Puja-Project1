@@ -1,5 +1,6 @@
 package com.petApp.adoption.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.petApp.adoption.models.enums.PetStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,9 @@ public class Pet {
     private String petCondition;
     private String gender;
     private PetStatus status;
+    @ManyToOne
+    @JoinColumn(name = "adopter_id")
+
+    private User adopter;
 
 }

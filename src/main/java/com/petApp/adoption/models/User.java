@@ -1,7 +1,11 @@
 package com.petApp.adoption.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -17,5 +21,8 @@ public class User {
     private String email;
     private String firstName;
     private String lastName;
+    @OneToMany(mappedBy = "adopter")
+    @JsonIgnoreProperties("adopter")
+    private List<Pet> adoptedPets;
 }
 
