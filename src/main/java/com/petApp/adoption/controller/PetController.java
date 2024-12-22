@@ -32,8 +32,8 @@ public class PetController {
         }
     }
 
-    @GetMapping("/public/fetch")
-    ResponseEntity<Pet> fetchPetById(@RequestParam Integer petId) throws Exception {
+    @GetMapping("/public/fetch/{petId}")
+    ResponseEntity<Pet> fetchPetById(@PathVariable Integer petId) throws Exception {
         Pet result = petService.fetchPetById(petId);
         if (result != null){
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -71,10 +71,17 @@ public class PetController {
         }
     }
 
-    @PutMapping("/protected/adopt/{petId}")
+    @PatchMapping("/protected/adopt/{petId}")
     ResponseEntity<Pet> adoptPetById(@PathVariable Integer petId) throws Exception {
         Pet adoptedPet = petService.adoptPet(petId);
         if (adoptedPet != null) return new ResponseEntity<>(adoptedPet, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PatchMapping("/protected/archive/{petId}")
+    ResponseEntity<Pet> archivePetById(@PathVariable Integer petId) throws Exception {
+        Pet archivedPet = petService.archivePet(petId);
+        if (archivedPet != null) return new ResponseEntity<>(archivedPet, HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 

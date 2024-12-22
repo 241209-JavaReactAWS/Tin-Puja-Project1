@@ -41,6 +41,15 @@ public class PetService {
         this.userRepository = userRepository;
     }
 
+    public Pet archivePet(Integer petId) {
+        Optional<Pet> pet = petRepository.findById(petId);
+        if (pet.isPresent() && pet.get().getStatus() == PetStatus.ACTIVE) {
+            pet.get().setStatus(PetStatus.ARCHIVED);
+            Pet archivedPet = petRepository.save(pet.get());
+            return archivedPet;
+        }
+        return null;
+    }
     public Pet adoptPet(Integer petId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Pet> pet = petRepository.findById(petId);
