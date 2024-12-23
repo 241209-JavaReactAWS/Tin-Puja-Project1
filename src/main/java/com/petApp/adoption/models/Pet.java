@@ -23,7 +23,6 @@ public class Pet {
     private String name;
     private String breed;
     private Integer age;
-    private String petCondition;
     private Gender gender;
     private PetStatus status;
     @ManyToOne

@@ -70,7 +70,6 @@ public class PetService {
             Pet newPet = new Pet();
             newPet.setAge(pet.getAge());
             newPet.setName(pet.getName());
-            newPet.setPetCondition(pet.getPetCondition());
             newPet.setGender(pet.getGender());
             newPet.setBreed(pet.getBreed());
             newPet.setStatus(PetStatus.ACTIVE);
@@ -140,7 +139,6 @@ public class PetService {
             updatePet.setBreed(pet.getBreed());
             updatePet.setName(pet.getName());
             updatePet.setAge(pet.getAge());
-            updatePet.setPetCondition(pet.getPetCondition());
             updatePet.setGender(pet.getGender());
             Pet updatedPet = petRepository.save(updatePet);
             log.info("Logging transaction for registering pet");

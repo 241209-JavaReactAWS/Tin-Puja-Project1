@@ -15,7 +15,6 @@ public class CheckValidation {
 
         if((pet.getAge() ==null) ||
             (pet.getBreed() ==null) ||
-                (pet.getPetCondition() ==null) ||
                 (pet.getName() ==null) ||
                 (pet.getGender() ==null) ){
             log.info("Pet registration failed");
@@ -35,7 +34,6 @@ public class CheckValidation {
         if(pet.getPetId() == null ||
                 (pet.getAge() ==null) ||
                 (pet.getBreed() ==null) ||
-                (pet.getPetCondition() ==null) ||
                 (pet.getName() ==null) ||
                 (pet.getGender() ==null) ){
             log.info("Pet registration failed");
