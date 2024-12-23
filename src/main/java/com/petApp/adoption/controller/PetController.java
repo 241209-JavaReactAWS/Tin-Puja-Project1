@@ -46,6 +46,22 @@ public class PetController {
         List <Pet> result = petService.fetchAll();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @GetMapping("/protected/fetchArchive")
+    @PreAuthorize("hasRole('pet-admin')")
+    ResponseEntity<List<Pet>>  fetchArchive() throws Exception {
+        List <Pet> result = petService.fetchArchive();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/protected/fetchAdopted")
+    @PreAuthorize("hasRole('pet-admin')")
+    ResponseEntity<List<Pet>>  fetchAdopted() throws Exception {
+        List <Pet> result = petService.fetchAdopted();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
     @DeleteMapping("/protected/delete/{petId}")
     @PreAuthorize("hasRole('pet-admin')")
     ResponseEntity<String> deletePetById(@PathVariable Integer petId) throws Exception {
@@ -75,9 +91,18 @@ public class PetController {
     }
 
     @PatchMapping("/protected/archive/{petId}")
+    @PreAuthorize("hasRole('pet-admin')")
     ResponseEntity<Pet> archivePetById(@PathVariable Integer petId) throws Exception {
         Pet archivedPet = petService.archivePet(petId);
         if (archivedPet != null) return new ResponseEntity<>(archivedPet, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PatchMapping("/protected/activate/{petId}")
+    @PreAuthorize("hasRole('pet-admin')")
+    ResponseEntity<Pet> activatePetById(@PathVariable Integer petId) throws Exception {
+        Pet activatedPet = petService.activatePet(petId);
+        if (activatedPet != null) return new ResponseEntity<>(activatedPet, HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 

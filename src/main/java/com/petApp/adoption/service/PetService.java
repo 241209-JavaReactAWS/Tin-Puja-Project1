@@ -51,6 +51,16 @@ public class PetService {
         }
         return null;
     }
+
+    public Pet activatePet(Integer petId) {
+        Optional<Pet> pet = petRepository.findById(petId);
+        if (pet.isPresent() && pet.get().getStatus() == PetStatus.ARCHIVED) {
+            pet.get().setStatus(PetStatus.ACTIVE);
+            Pet activatedPet = petRepository.save(pet.get());
+            return activatedPet;
+        }
+        return null;
+    }
     public Pet adoptPet(Integer petId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Pet> pet = petRepository.findById(petId);
@@ -110,6 +120,18 @@ public class PetService {
             List<Pet> pets = new ArrayList<>();
             pets = petRepository.findByStatus(PetStatus.ACTIVE);
             return pets;
+    }
+
+    public List<Pet> fetchArchive() {
+        List<Pet> pets = new ArrayList<>();
+        pets = petRepository.findByStatus(PetStatus.ARCHIVED);
+        return pets;
+    }
+
+    public List<Pet> fetchAdopted() {
+        List<Pet> pets = new ArrayList<>();
+        pets = petRepository.findByStatus(PetStatus.ADOPTED);
+        return pets;
     }
 
     public String deletPetById(Integer petId) throws Exception {
